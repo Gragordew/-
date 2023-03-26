@@ -1,0 +1,35 @@
+<div class="row">
+    <form action="/php/handlerAddComment.php" method="post" class="my-4">
+        <input type="hidden" name="article_id" value="<?= $id ?>">
+        <div class="mb-3">
+            <textarea name="comment" class="form-control" placeholder="Комментарий"></textarea>
+        </div>
+        <input type="submit" class="btn btn-primary">
+    </form>
+</div>
+<script>
+    // Считывам id статьи из URI в переменную articleId
+    let articleId = location.pathname.split('/')[2];
+    let container = document.getElementById('container');
+    let formData = new FormData();
+    formData.append("article_id", articleId);
+    fetch('/article', {
+        method: "POST",
+        body: formData
+    }).then(response=>response.json()) // function(response){return response.json()}
+        .then(result=>{
+            console.log(result);
+            container.innerHTML += `
+                <h1 class="text-center my-3">${result.title}</h1>
+                <div class="my-3">${result.content}</div>
+                <div class="row">
+                    <div class="col-6 text-start">
+                        Автор: ${result.author}
+                    </div>
+                    <div class="col-6 text-end">
+                        <a href="/deleteArticle/?id=${result.id}">[удалить]</a>
+                    </div>
+                </div>
+            `;
+        })
+</script>
